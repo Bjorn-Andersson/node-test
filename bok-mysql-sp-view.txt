@@ -1,0 +1,62 @@
+-- -------- Stored Procedures för INSERT, UPDATE och DELETE
+DELIMITER //
+CREATE PROCEDURE InsertBook(
+IN titel VARCHAR(50),
+IN forfattare VARCHAR(50),
+IN isbn VARCHAR(50),
+IN pris INT,
+IN kategoriId INT
+)
+ BEGIN
+ INSERT INTO bok (bokTitel, bokForfattare, bokIsbn, bokPris, bokKategoriId)
+ VALUES (titel,forfattare,isbn,pris,kategoriId);
+ END //
+
+CALL InsertBook("Sagan om ringen","J.R.R Tolkien","67890",140,1);
+
+DROP PROCEDURE IF EXISTS InsertBook;
+
+--
+
+DELIMITER //
+CREATE PROCEDURE UpdateBook(
+IN titel VARCHAR(50),
+IN forfattare VARCHAR(50),
+IN isbn VARCHAR(50),
+IN pris INT,
+IN id INT
+)
+ BEGIN
+ UPDATE bok SET bokTitel = titel, bokForfattare = forfattare, bokIsbn = isbn, bokPris = pris WHERE bokId = id;
+ END //
+
+CALL UpdateBook("Sagan om de två tornen","J.R.R Tolkien","67890", 180,3);
+
+DROP PROCEDURE IF EXISTS UpdateBook;
+
+--
+
+DELIMITER //
+CREATE PROCEDURE DeleteBook(IN id INT)
+ BEGIN
+ DELETE FROM bok WHERE bokId = id;
+ END //
+
+CALL DeleteBook(3);
+
+DROP PROCEDURE IF EXISTS UpdateBook;
+
+-- ---------
+
+-- ---------
+-- View för att visa böcker kopplat till kategori
+CREATE VIEW viewBookCategories AS
+SELECT * FROM kategori INNER JOIN bok ON kategori.kategoriId = bok.bokKategoriId;
+
+SELECT * FROM viewBookCategories;
+
+-- VIEW för att räkna antal böcker
+CREATE VIEW viewBookCount AS
+SELECT COUNT(bokId) AS bokCount FROM bok;
+
+SELECT * FROM viewBookCount;
